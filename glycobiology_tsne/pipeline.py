@@ -86,11 +86,11 @@ class BertTsnePipeline(Pipeline):
                  ('tsne', TSNE(**tnse_kwargs))]
         super(BertTsnePipeline, self).__init__(steps)
 
-    def fit_transform_plot(self, X):
+    def fit_transform_plot(self, X, c=None):
         X_t = self.fit_transform(X)
 
         f, axarr = plt.subplots()
-        axarr.scatter(X_t[:, 0], X_t[:, 1])
+        axarr.scatter(X_t[:, 0], X_t[:, 1], c=c)
 
         for X_i, X_t_i in zip(X, X_t):
             axarr.annotate(X_i, (X_t_i[0], X_t_i[1]))
