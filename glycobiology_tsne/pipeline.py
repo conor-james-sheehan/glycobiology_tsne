@@ -78,13 +78,13 @@ class BertTransformer(BaseEstimator, TransformerMixin):
         return bert_out
 
 
-class BertTsneEPipeline(Pipeline):
+class BertTsnePipeline(Pipeline):
 
     def __init__(self, pretrained_weights, **tnse_kwargs):
         steps = [('tokenizer', TokenizerTransformer(pretrained_weights)),
                  ('bert', BertTransformer(pretrained_weights)),
                  ('tsne', TSNE(**tnse_kwargs))]
-        super(BertTsneEPipeline, self).__init__(steps)
+        super(BertTsnePipeline, self).__init__(steps)
 
     def fit_transform_plot(self, X):
         X_t = self.fit_transform(X)
