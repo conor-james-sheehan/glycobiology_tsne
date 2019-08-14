@@ -1,4 +1,5 @@
 import os
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from pytorch_transformers import BertTokenizer, BertConfig, BertModel
@@ -77,9 +78,21 @@ class BertTransformer(BaseEstimator, TransformerMixin):
         return bert_out
 
 
-def get_pipeline(pretrained_weights):
-    tsne_pipeline = Pipeline([
-        ('tokenizer', TokenizerTransformer(pretrained_weights)),
-        ('bert', BertTransformer(pretrained_weights)),
-        ('tsne', TSNE())])
-    return tsne_pipeline
+class BertTsneEPipeline(Pipeline):
+
+    def __init__(self, pretrained_weights, **tnse_kwargs):
+        steps = [('tokenizer', TokenizerTransformer(pretrained_weights)),
+                 ('bert', BertTransformer(pretrained_weights)),
+                 ('tsne', TSNE(**tnse_kwargs))]
+        super(BertTsneEPipeline, self).__init__(steps)
+
+    def fit_transform_plot(self, X):
+        X_t = self.fit_transform(X)
+
+        f, axarr = plt.subplots()
+        axarr.scatter(X_t[:, 0], X_t[:, 1])
+
+        for X_i, X_t_i in zip(X, X_t):
+            axarr.annotate(X_i, (X_t_i[0], X_t_i[1]))
+
+        return X_t, (f, axarr)
