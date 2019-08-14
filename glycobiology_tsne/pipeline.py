@@ -62,6 +62,7 @@ class BertTransformer(BaseEstimator, TransformerMixin):
             self.bert = _get_custom_bert(pretrained_weights)
         except FileNotFoundError:
             self.bert = BertModel.from_pretrained(pretrained_weights)
+            assert self.bert is not None, '{} is not a valid directory containing bert weights'
 
         self.bert.to(device)
         self.bert.eval()
