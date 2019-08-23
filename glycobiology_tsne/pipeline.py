@@ -121,7 +121,7 @@ class FastTextEmbeddingTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        return np.array(map(self.model.get_word_vector, X))
+        return np.array(list(map(self.model.get_word_vector, X)))
 
 
 class FastTextPipeline(BaseTsnePipeline):
@@ -144,11 +144,3 @@ class DummyPipeline(BaseTsnePipeline):
 
     def __init__(self, **tsne_kwargs):
         super(DummyPipeline, self).__init__(self.DummyEmbeddingTransformer(), **tsne_kwargs)
-
-
-if __name__ == '__main__':
-    pipe = DummyPipeline()
-    words = ['Conor', 'James', 'Sheehan', 'dog', 'cat', 'elephant']
-    c = [0, 0, 0, 1, 1, 1]
-    pipe.fit_transform_plot(words, c)
-    plt.show()
